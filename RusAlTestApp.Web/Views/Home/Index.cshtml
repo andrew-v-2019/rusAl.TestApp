@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+    <form>
+        <div class="form-group">
+            <label for="nameInput">Имя</label>
+            <input type="text"
+                   class="form-control"
+                   id="nameInput"
+                   aria-describedby="emailHelp"
+                   placeholder="Введите имя">
+        </div>
+
+        <div class="form-group">
+            <label for="surnameInput">Фамилия</label>
+            <input type="text"
+                   class="form-control"
+                   id="surnameInput"
+                   placeholder="Введите фамилию">
+        </div>
+
+        <div class="form-group">
+            <label for="dobInput">Дата рождения</label>
+            <input type="date"
+                   class="form-control"
+                   id="dobInput"
+                   placeholder="Введите дату рождения ">
+        </div>
+        
+        <div class="form-group">
+            <label for="phoneInput">Телефон</label>
+            <input type="tel"
+                   class="form-control bfh-phone"
+                   id="phoneInput"
+                   data-format="+d (ddd) ddd-dddd">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
