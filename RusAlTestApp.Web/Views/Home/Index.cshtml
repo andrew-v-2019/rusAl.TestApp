@@ -2,40 +2,324 @@
     ViewData["Title"] = "Home Page";
 }
 
+<div class="row" id="spinner" style="display: flex; align-items: center; justify-content: center;">
+    <span class="spinner-border"
+          role="status"
+          aria-hidden="true">
+    </span>
+</div>
 
-    <form>
-        <div class="form-group">
-            <label for="nameInput">Имя</label>
-            <input type="text"
-                   class="form-control"
-                   id="nameInput"
-                   aria-describedby="emailHelp"
-                   placeholder="Введите имя">
+<div class="alert alert-success" id="success" role="alert" style="margin-top: -45px; opacity: 0;">
+    Сохранено
+</div>
+
+<form class="needs-validation" id="form" novalidate style="visibility: hidden;">
+   
+    <fieldset id="formFieldset">
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="name">Имя*</label>
+                <input type="text"
+                       class="form-control"
+                       id="name"
+                       required
+                       placeholder="Введите имя">
+
+                <div class="invalid-feedback">
+                    Введите имя
+                </div>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="lastName">Фамилия*</label>
+                <input type="text"
+                       class="form-control"
+                       id="lastName"
+                       required
+                       placeholder="Введите фамилию">
+
+                <div class="invalid-feedback">
+                    Введите фамилию
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="dateOfBirth">Дата рождения</label>
+                <input type="date"
+                       class="form-control"
+                       id="dateOfBirth"
+                       placeholder="Введите дату рождения ">
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="phone">Телефон*</label>
+                <input type="text"
+                       class="form-control bfh-phone"
+                       required
+                       pattern=".{15,}"
+                       id="phone"
+                       data-format="+d ddd ddd dddd">
+
+                <div class="invalid-feedback">
+                    Введите Телефон
+                </div>
+            </div>
         </div>
 
         <div class="form-group">
-            <label for="surnameInput">Фамилия</label>
-            <input type="text"
-                   class="form-control"
-                   id="surnameInput"
-                   placeholder="Введите фамилию">
+            <label for="colors">Какой цвет вам больше нравится?</label>
+            <select class="selectpicker form-control" id="colors" multiple title="Выберите цвет">
+            </select>
         </div>
 
         <div class="form-group">
-            <label for="dobInput">Дата рождения</label>
-            <input type="date"
-                   class="form-control"
-                   id="dobInput"
-                   placeholder="Введите дату рождения ">
-        </div>
-        
-        <div class="form-group">
-            <label for="phoneInput">Телефон</label>
-            <input type="tel"
-                   class="form-control bfh-phone"
-                   id="phoneInput"
-                   data-format="+d (ddd) ddd-dddd">
+            <label for="drinks">Какой напиток вы предпочитаете?</label>
+            <select class="selectpicker form-control" id="drinks" multiple title="Выберите напиток">
+            </select>
         </div>
 
-        <button type="submit" class="btn btn-primary">Сохранить</button>
-    </form>
+        <button type="submit" class="btn btn-primary" type="button">
+            <div style="display: flex">
+                <span id="buttonSpinner" class="spinner-border spinner-border-sm"
+                      style="margin-top: 5px; margin-right: 5px; display: none;"
+                      role="status"
+                      aria-hidden="true">
+
+                </span>
+                <span id="buttonText"> Сохранить </span>
+            </div>
+        </button>
+
+    </fieldset>
+</form>
+
+
+@section Scripts {
+
+    <script>
+        window.onload = function() {
+            'use strict';
+
+            hideForm();
+            lockForm('Загрузка...');
+
+
+            function initData() {
+                $.ajax({
+                    type: "GET",
+                    url: "api/registrations/selectBoxValues",
+                    success: function(data) {
+                        setUpSelectPicker(data.colors, `colors`);
+                        setUpSelectPicker(data.drinks, `drinks`);
+                        showForm();
+                        unlockForm();
+
+
+                    },
+                    failure: function(er) {
+                        console.log(er);
+                    }
+                });
+            }
+
+            function setUpSelectPicker(values, id) {
+                const options = [];
+                values.forEach(function(item) {
+                    const option = "<option value='" + item.id + "'>" + item.text + "</option>";
+                    options.push(option);
+                });
+                const selector = `#` + id;
+                $(selector).html(options);
+                $(selector).selectpicker('refresh');
+            }
+
+            function lockForm(saveButtonText) {
+
+                const fieldSet = document.getElementById('formFieldset');
+                if (fieldSet) {
+                    fieldSet.setAttribute('disabled', 'disabled');
+                }
+
+                const buttonSpinner = document.getElementById('buttonSpinner');
+
+                if (buttonSpinner) {
+                    buttonSpinner.style.display = 'block';
+                }
+
+                const buttonText = document.getElementById('buttonText');
+
+                if (buttonText) {
+                    if (!saveButtonText) {
+                        buttonText.innerHTML = 'Сохранение...';
+                    } else {
+                        buttonText.innerHTML = saveButtonText;
+                    }
+                }
+            }
+
+            function hideForm() {
+                const form = document.getElementById('form');
+                form.style.visibility = 'hidden';
+                const spinner = document.getElementById('spinner');
+                spinner.style.visibility = 'visible';
+            }
+
+            function showForm() {
+                const form = document.getElementById('form');
+                form.style.visibility = 'visible';
+
+                const spinner = document.getElementById('spinner');
+                spinner.style.visibility = 'hidden';
+            }
+
+            function unlockForm() {
+                const fieldSet = document.getElementById('formFieldset');
+                if (fieldSet) {
+                    fieldSet.removeAttribute('disabled');
+                }
+
+                const buttonSpinner = document.getElementById('buttonSpinner');
+
+                if (buttonSpinner) {
+                    buttonSpinner.style.display = 'none';
+                }
+
+                const buttonText = document.getElementById('buttonText');
+
+                if (buttonText) {
+                    buttonText.innerHTML = 'Сохранить';
+                }
+
+            }
+
+            initData();
+
+            const form = document.getElementById('form');
+            form.addEventListener('submit',
+                function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    form.classList.add('was-validated');
+                    const formValid = form.checkValidity();
+                    if (!formValid) {
+                        return;
+                    }
+
+                    const model = getFormValues();
+                    lockForm();
+                    saveData(model);
+
+                },
+                false);
+
+
+            function saveData(model) {
+                $.ajax({
+                    type: "POST",
+                    url: "api/registrations",
+                    contentType: 'application/json',
+                    data: JSON.stringify(model),
+                    dataType: 'text',
+                    success: function(data) {
+
+                        resetForm();
+                        unlockForm();
+                        showSuccess();
+                    },
+                    failure: function(er) {
+                        console.log(er);
+                    }
+                });
+            }
+
+            function getFormValues() {
+                const names = ['name', 'lastName', 'dateOfBirth', 'phone', 'colors', 'drinks'];
+                const model = {};
+                names.forEach(function(name) {
+                    let val;
+                    if (name === 'colors' || name === 'drinks') {
+                        const ids = $($('#' + name)[0]).val();
+                        val = [];
+                        ids.forEach(function(id) {
+                            val.push(parseInt(id));
+                        });
+                    } else {
+                        const input = document.getElementById(name);
+                        val = input.value;
+                    }
+                    model[name] = val;
+                });
+
+                return model;
+            }
+
+            function showSuccess() {
+                const timerId = setInterval(function() {
+                        const success = document.getElementById('success');
+                        if (!success)
+                            return;
+                        const opacity = success.style.opacity;
+                        if (opacity < 1) {
+                            success.style.opacity = parseFloat(success.style.opacity) + 0.1;
+                        } else {
+                            success.style.opacity = 1;
+                            clearInterval(timerId);
+                        }
+                    },
+                    5);
+            }
+
+            function hideSuccess() {
+                const timerId = setInterval(function() {
+                        const success = document.getElementById('success');
+                        if (!success)
+                            return;
+                        const opacity = success.style.opacity;
+                        if (opacity > 0) {
+                            success.style.opacity = parseFloat(success.style.opacity) - 0.1;
+                        } else {
+                            success.style.opacity = 0;
+                            clearInterval(timerId);
+                        }
+                    },
+                    10);
+            }
+
+            $('.form-control').on('focus',
+                function() {
+                    hideSuccess();
+                });
+
+            $('.btn').on('focus',
+                function() {
+                    hideSuccess();
+                });
+
+            function resetSelectPicker(id) {
+                const selector = `#` + id;
+                $(selector).selectpicker('deselectAll');
+            }
+
+            function resetForm() {
+                const form = document.getElementById('form');
+                form.classList.remove('was-validated');
+
+                const names = ['name', 'lastName', 'dateOfBirth', 'phone', 'colors', 'drinks'];
+                names.forEach(function(name) {
+                    if (name === 'colors' || name === 'drinks') {
+                        resetSelectPicker(name);
+                    } else {
+                        const input = document.getElementById(name);
+                        if (input) {
+                            input.value = '';
+                        }
+                    }
+                });
+            }
+        };
+
+    </script>
+}

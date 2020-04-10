@@ -1,6 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 
+
 namespace RusAlTestApp.Data.Models
 {
     public class Drink

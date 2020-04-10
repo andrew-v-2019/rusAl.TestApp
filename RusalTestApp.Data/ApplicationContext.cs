@@ -26,12 +26,21 @@ namespace RusAlTestApp.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<RegistrationDrink>()
-                .HasKey(t => new {t.DrinkId, t.RegistrationId});
+                .HasKey(t => new { t.DrinkId, t.RegistrationId });
 
 
             modelBuilder.Entity<RegistrationDrink>()
                 .HasOne(sc => sc.Registration)
                 .WithMany(s => s.RegistrationDrinks)
+                .HasForeignKey(sc => sc.RegistrationId);
+
+            modelBuilder.Entity<RegistrationColor>()
+                .HasKey(t => new { t.ColorId, t.RegistrationId });
+
+
+            modelBuilder.Entity<RegistrationColor>()
+                .HasOne(sc => sc.Registration)
+                .WithMany(s => s.RegistrationColors)
                 .HasForeignKey(sc => sc.RegistrationId);
 
 
@@ -64,7 +73,7 @@ namespace RusAlTestApp.Data
 
         private static IEnumerable<Color> CreateColors()
         {
-            var colors = new[] {"Синий", "Желтый", "Красный"};
+            var colors = new[] { "Синий", "Желтый", "Красный" };
             var result = new List<Color>();
             for (var i = 0; i < colors.Length; i++)
             {
@@ -80,7 +89,7 @@ namespace RusAlTestApp.Data
 
         private static IEnumerable<Drink> CreateDrinks()
         {
-            var colors = new[] {"Чай", "Кофе", "Сок", "Вода"};
+            var colors = new[] { "Чай", "Кофе", "Сок", "Вода" };
             var result = new List<Drink>();
             for (var i = 0; i < colors.Length; i++)
             {
