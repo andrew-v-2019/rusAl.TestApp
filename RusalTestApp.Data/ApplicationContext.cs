@@ -89,25 +89,5 @@ namespace RusAlTestApp.Data
 
             return result;
         }
-
-        public static string EncodePassword(string password)
-        {
-            var salt = new byte[128 / 8];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-
-            var hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password,
-                salt,
-                KeyDerivationPrf.HMACSHA1,
-                10000,
-                256 / 8));
-
-            return hashed;
-        }
     }
-
-
 }
