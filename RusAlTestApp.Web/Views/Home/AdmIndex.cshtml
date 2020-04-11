@@ -1,0 +1,299 @@
+﻿
+@{
+    ViewData["Title"] = "Список зарегестрированных";
+}
+
+<div class="row" id="spinner" style="display: flex; align-items: center; justify-content: center;">
+    <span class="spinner-border"
+          role="status"
+          aria-hidden="true">
+    </span>
+</div>
+
+<div id="pageContainer" style="visibility: hidden;">
+    <h3>Список зарегестрированных</h3>
+
+    <div class="row" style="margin-top: 45px;">
+        <div class="col-md-3">
+            <div class="form-group">
+                <select class="selectpicker form-control" id="colors" multiple title="Выберите цвета">
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <select class="selectpicker form-control" id="drinks" multiple title="Выберите напитки">
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <button class="btn btn-success" type="button" id="filterButton">
+                <div>
+                    <span id=""> Фильтровать </span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+
+    <div class="row" style="margin-top: 10px;">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-sm" style="font-size: 88%; text-align: center;">
+                    <thead>
+                        <tr>
+                            <th scope="col">Имя</th>
+                            <th scope="col">Фамилия</th>
+                            <th scope="col">Дата рождения</th>
+                            <th scope="col">Телефон</th>
+                            <th scope="col">Любимые цвета</th>
+                            <th scope="col">Любимые напитки</th>
+                        </tr>
+                    </thead>
+                    <tbody id="container"></tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="8" class="text-center">
+
+                                <button class="btn btn-link btn-sm" type="button" id="loadMoreButton">
+                                    <div style="display: flex">
+                                        <span id="buttonSpinner" class="spinner-border spinner-border-sm"
+                                              style="margin-top: 5px; margin-right: 5px; display: none;"
+                                              role="status"
+                                              aria-hidden="true">
+
+                                        </span>
+                                        <span id="buttonText"> Загрузить ещё... </span>
+                                    </div>
+                                </button>
+
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        window.onload = function () {
+            'use strict';
+
+            const itemsOnPage = 10;
+            let skip = 0;
+            const baseUrl = "/api/registrations";
+
+            $("#loadMoreButton").click(function () {
+                load();
+            });
+
+
+            $("#filterButton").click(function () {
+                filter();
+            });
+
+            initData();
+
+            function initData() {
+                showLoadingIndicator();
+                $.ajax({
+                    type: "GET",
+                    url: "/api/registrations/selectBoxValues",
+                    success: function (data) {
+                        setUpSelectPicker(data.colors, `colors`);
+                        setUpSelectPicker(data.drinks, `drinks`);
+
+                        load();
+                    },
+                    failure: function (er) {
+                        console.log(er);
+                    }
+                });
+            }
+
+            function showPageContent() {
+                const pageContainer = document.getElementById('pageContainer');
+                pageContainer.style.visibility = 'visible';
+
+                const spinner = document.getElementById('spinner');
+                spinner.style.visibility = 'hidden';
+            }
+
+            function setUpSelectPicker(values, id) {
+                const options = [];
+                values.forEach(function (item) {
+                    const option = "<option value='" + item.id + "'>" + item.text + "</option>";
+                    options.push(option);
+                });
+                const selector = `#` + id;
+                $(selector).html(options);
+                $(selector).selectpicker('refresh');
+            }
+
+            function clearTable() {
+                const table = document.getElementById("container");
+                while (table.hasChildNodes()) {
+                    table.removeChild(table.firstChild);
+                }
+            }
+
+            function filter() {
+                clearTable();
+                skip = 0;
+                showLoadMoreButton();
+                load();
+            }
+
+            function load() {
+                const url = formatUrl();
+                showLoadingIndicator();
+                $.get(url,
+                    function (data) {
+
+                        if (!data || !data.length) {
+                            hideLoadMoreButton();
+                        } else {
+                            formatTable(data);
+
+                            if (data.length < itemsOnPage) {
+                                hideLoadMoreButton();
+                            } else {
+                                skip = skip + itemsOnPage;
+                            }
+                        }
+
+                        hideLoadingIndicator();
+                        showPageContent();
+                    })
+                    .fail(function (er) {
+                        console.log(er);
+                    });
+            }
+
+            function hideLoadMoreButton() {
+                const button = document.getElementById('loadMoreButton');
+
+                if (!button)
+                    return;
+
+                button.style.visibility = 'hidden';
+            }
+
+
+            function showLoadMoreButton() {
+                const button = document.getElementById('loadMoreButton');
+
+                if (!button)
+                    return;
+
+                button.style.visibility = 'visible';
+            }
+
+            function showLoadingIndicator() {
+                const buttonSpinner = document.getElementById('buttonSpinner');
+
+                if (buttonSpinner) {
+                    buttonSpinner.style.display = 'block';
+                }
+
+                const buttonText = document.getElementById('buttonText');
+
+                if (buttonText) {
+                    buttonText.innerHTML = 'Загрузка...';
+                }
+
+                const button = document.getElementById('loadMoreButton');
+                button.setAttribute('disabled', 'disabled');
+
+                const filterButton = document.getElementById('filterButton');
+                filterButton.setAttribute('disabled', 'disabled');
+            }
+
+            function hideLoadingIndicator() {
+                const buttonSpinner = document.getElementById('buttonSpinner');
+
+                if (buttonSpinner) {
+                    buttonSpinner.style.display = 'none';
+                }
+
+                const buttonText = document.getElementById('buttonText');
+
+                if (buttonText) {
+                    buttonText.innerHTML = ' Загрузить ещё...';
+                }
+
+                const button = document.getElementById('loadMoreButton');
+                button.removeAttribute('disabled');
+
+                const filterButton = document.getElementById('filterButton');
+                filterButton.removeAttribute('disabled');
+            }
+
+            function formatTable(data) {
+                if (!data) {
+                    return;
+                }
+
+                data.forEach(function (item) {
+                    const tr = formatTableRow(item);
+                    $('#container').append(tr);
+                });
+            }
+
+            function formatTableRow(item) {
+                let tr = '<tr>';
+                tr = tr + formatTableCell(item.name);
+                tr = tr + formatTableCell(item.lastName);
+                tr = tr + formatTableCell(item.dateOfBirth);
+                tr = tr + formatTableCell(item.phone);
+                tr = tr + formatTableCell(item.colorNamesAsString);
+                tr = tr + formatTableCell(item.drinkNamesAsString);
+                tr = tr + '</tr>';
+                return tr;
+            }
+
+            function formatTableCell(cellData) {
+                return '<td>' + cellData + '</td>';
+            }
+
+            function formatUrl() {
+                let url = baseUrl + '?take=' + itemsOnPage + '&skip=' + skip;
+                const colorIds = getSelectPickerValues('colors');
+                const drinkIds = getSelectPickerValues('drinks');
+                url = url + getArrayAsUrlParameters(colorIds, 'colorIds');
+                url = url + getArrayAsUrlParameters(drinkIds, 'drinkIds');
+                return url;
+            }
+
+            function getArrayAsUrlParameters(arr, paramName) {
+                if (!arr || !arr.length) {
+                    return '';
+                }
+
+                let urlParameters = '';
+                arr.forEach(function (item) {
+                    urlParameters = urlParameters + '&' + paramName + '=' + item;
+                });
+                return urlParameters;
+            }
+
+            function getSelectPickerValues(id) {
+                const ids = $($('#' + id)[0]).val();
+                const val = [];
+                ids.forEach(function (id) {
+                    val.push(parseInt(id));
+                });
+
+                return val;
+            }
+
+        }
+
+    </script>
+
+}
+

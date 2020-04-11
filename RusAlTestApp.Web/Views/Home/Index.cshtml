@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Заполнить форму";
 }
 
 <div class="row" id="spinner" style="display: flex; align-items: center; justify-content: center;">
@@ -102,10 +102,7 @@
     <script>
         window.onload = function() {
             'use strict';
-
-            hideForm();
-            lockForm('Загрузка...');
-
+            lockForm();
 
             function initData() {
                 $.ajax({
@@ -116,8 +113,6 @@
                         setUpSelectPicker(data.drinks, `drinks`);
                         showForm();
                         unlockForm();
-
-
                     },
                     failure: function(er) {
                         console.log(er);
@@ -136,7 +131,7 @@
                 $(selector).selectpicker('refresh');
             }
 
-            function lockForm(saveButtonText) {
+            function lockForm() {
 
                 const fieldSet = document.getElementById('formFieldset');
                 if (fieldSet) {
@@ -152,19 +147,8 @@
                 const buttonText = document.getElementById('buttonText');
 
                 if (buttonText) {
-                    if (!saveButtonText) {
-                        buttonText.innerHTML = 'Сохранение...';
-                    } else {
-                        buttonText.innerHTML = saveButtonText;
-                    }
+                    buttonText.innerHTML = 'Сохранение...';
                 }
-            }
-
-            function hideForm() {
-                const form = document.getElementById('form');
-                form.style.visibility = 'hidden';
-                const spinner = document.getElementById('spinner');
-                spinner.style.visibility = 'visible';
             }
 
             function showForm() {
@@ -269,7 +253,7 @@
                             clearInterval(timerId);
                         }
                     },
-                    5);
+                    20);
             }
 
             function hideSuccess() {
@@ -285,7 +269,7 @@
                             clearInterval(timerId);
                         }
                     },
-                    10);
+                    40);
             }
 
             $('.form-control').on('focus',

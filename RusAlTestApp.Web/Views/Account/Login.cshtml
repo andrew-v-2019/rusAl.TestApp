@@ -1,0 +1,42 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Вход для администратора";
+}
+
+    <h3>Вход для Администратора</h3>
+
+<form method="post" asp-controller="Account" asp-action="Login" style="margin-top: 40px;">
+
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label asp-for="Email" for="inputEmail">Имя пользователя</label>
+            <input asp-for="Email" type="text" class="form-control" id="inputEmail" placeholder="Имя пользователя">
+            <span asp-validation-for="Email"></span>
+        </div>
+
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label asp-for="Password" for="inputPassword">Password</label>
+            <input asp-for="Password" type="password" class="form-control" id="inputPassword" placeholder="Password">
+            <span asp-validation-for="Password"></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Войти</button>
+</form>
+
+<style>
+    .validation-summary-errors {
+        color: #dc3545;
+    }
+
+    .field-validation-error {
+        font-size: 80%;
+        color: #dc3545;
+    }
+
+    </style>

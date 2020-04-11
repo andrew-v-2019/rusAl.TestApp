@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,9 @@ namespace RusAlTestApp.Data
         public DbSet<Drink> Drinks { get; set; }
         public DbSet<Color> Colors { get; set; }
 
+        public DbSet<RegistrationDrink> RegistrationDrinks { get; set; }
+        public DbSet<RegistrationColor> RegistrationColors { get; set; }
+
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
@@ -23,6 +27,7 @@ namespace RusAlTestApp.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<RegistrationDrink>()
@@ -44,10 +49,6 @@ namespace RusAlTestApp.Data
                 .HasForeignKey(sc => sc.RegistrationId);
 
 
-            modelBuilder.Entity<IdentityUser>().HasData(
-                CreateDefaultUser()
-            );
-
             modelBuilder.Entity<Drink>().HasData(
                 CreateDrinks()
             );
@@ -55,20 +56,6 @@ namespace RusAlTestApp.Data
             modelBuilder.Entity<Color>().HasData(
                 CreateColors()
             );
-        }
-
-        private static IdentityUser CreateDefaultUser()
-        {
-            return new IdentityUser
-            {
-                UserName = "admin",
-                PasswordHash = EncodePassword("admin"),
-                Email = "admin",
-                EmailConfirmed = true,
-                LockoutEnabled = false,
-                TwoFactorEnabled = false,
-                Id = Guid.NewGuid().ToString(),
-            };
         }
 
         private static IEnumerable<Color> CreateColors()
@@ -105,18 +92,20 @@ namespace RusAlTestApp.Data
 
         public static string EncodePassword(string password)
         {
-            byte[] salt;
-            byte[] buffer2;
-            using (var bytes = new Rfc2898DeriveBytes(password, 0x10, 0x3e8))
+            var salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
             {
-                salt = bytes.Salt;
-                buffer2 = bytes.GetBytes(0x20);
+                rng.GetBytes(salt);
             }
 
-            var dst = new byte[0x31];
-            Buffer.BlockCopy(salt, 0, dst, 1, 0x10);
-            Buffer.BlockCopy(buffer2, 0, dst, 0x11, 0x20);
-            return Convert.ToBase64String(dst);
+            var hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password,
+                salt,
+                KeyDerivationPrf.HMACSHA1,
+                10000,
+                256 / 8));
+
+            return hashed;
         }
     }
 

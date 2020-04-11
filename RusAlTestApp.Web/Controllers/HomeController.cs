@@ -1,30 +1,20 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RusAlTestApp.Data;
-using RusAlTestApp.Web.Models;
 
 namespace RusAlTestApp.Web.Controllers
 {
     public class HomeController : Controller
     {
-
-        private ApplicationContext _context;
-        public HomeController(ApplicationContext context)
-        {
-            _context = context;
-        }
-
         public IActionResult Index()
         {
             return View();
         }
 
-       
 
-        public IActionResult Privacy()
+        [Authorize(Roles = "admin")]
+        public IActionResult AdmIndex()
         {
             return View();
         }
-
     }
 }
