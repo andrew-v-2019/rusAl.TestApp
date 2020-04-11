@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RusAlTestApp.Data", "RusalTestApp.Data\RusAlTestApp.Data.csproj", "{A273D8BB-3A9A-4E2D-A32C-11B7C19F3163}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RusAlTestApp.Data", "RusalTestApp.Data\RusAlTestApp.Data.csproj", "{A273D8BB-3A9A-4E2D-A32C-11B7C19F3163}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RusAlTestApp.Web", "RusAlTestApp.Web\RusAlTestApp.Web.csproj", "{99295A19-2CE4-4336-B683-D53ECFCC9F37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RusAlTestApp.Web", "RusAlTestApp.Web\RusAlTestApp.Web.csproj", "{99295A19-2CE4-4336-B683-D53ECFCC9F37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RusAlTestApp.Services", "RusAlTestApp.Services\RusAlTestApp.Services.csproj", "{04223600-DB72-4182-A1CE-ED1A2A5C2160}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RusAlTestApp.ViewModels", "RusAlTestApp.ViewModels\RusAlTestApp.ViewModels.csproj", "{1AAC7088-9BE2-4BE5-B438-D56BFD52C17B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{99295A19-2CE4-4336-B683-D53ECFCC9F37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99295A19-2CE4-4336-B683-D53ECFCC9F37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99295A19-2CE4-4336-B683-D53ECFCC9F37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04223600-DB72-4182-A1CE-ED1A2A5C2160}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04223600-DB72-4182-A1CE-ED1A2A5C2160}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04223600-DB72-4182-A1CE-ED1A2A5C2160}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04223600-DB72-4182-A1CE-ED1A2A5C2160}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AAC7088-9BE2-4BE5-B438-D56BFD52C17B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AAC7088-9BE2-4BE5-B438-D56BFD52C17B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AAC7088-9BE2-4BE5-B438-D56BFD52C17B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AAC7088-9BE2-4BE5-B438-D56BFD52C17B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

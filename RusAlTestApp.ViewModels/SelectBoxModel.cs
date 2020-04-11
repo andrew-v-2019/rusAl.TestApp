@@ -1,5 +1,5 @@
 ﻿
-namespace RusAlTestApp.Web.Models
+namespace RusAlTestApp.ViewModels
 {
     public class SelectBoxModel
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RusAlTestApp.Web.Models
+namespace RusAlTestApp.ViewModels
 {
     public class LoginViewModel
     {

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RusAlTestApp.Data;
+using RusAlTestApp.Services;
 
 namespace RusAlTestApp.Web
 {
@@ -40,12 +41,11 @@ namespace RusAlTestApp.Web
                 options.Password.RequireLowercase = false;
             });
 
-           services.AddRazorPages()
-                .AddRazorRuntimeCompilation();
+            services.AddRazorPages()
+                 .AddRazorRuntimeCompilation();
 
             services.AddControllersWithViews();
-
-            
+            services.AddTransient<IRegistrationsService, RegistrationsService>();
         }
 
         public async Task CreateUserAndRole(IServiceProvider services)
@@ -60,7 +60,6 @@ namespace RusAlTestApp.Web
                 var defaultUser = await CreateDefaultUser(scope, adminUserName, adminPassword);
                 var defaultRole = await CreateDefaultRole(scope, adminRoleName);
                 await AddUserToRole(scope, defaultRole, defaultUser);
-
             }
         }
 
@@ -73,7 +72,7 @@ namespace RusAlTestApp.Web
             if (defaultUser != null)
                 return defaultUser;
 
-            var user = new IdentityUser {UserName = adminUserName, Email = adminUserName};
+            var user = new IdentityUser { UserName = adminUserName, Email = adminUserName };
             var identityResult = (await userManager.CreateAsync(user, adminPassword));
             defaultUser = await userManager.FindByNameAsync(adminUserName);
 
@@ -89,7 +88,7 @@ namespace RusAlTestApp.Web
                 return defaultRole;
             var role = new IdentityRole
             {
-                Name = adminRoleName, 
+                Name = adminRoleName,
                 NormalizedName = adminRoleName
             };
             await roleManager.CreateAsync(role);
@@ -108,7 +107,7 @@ namespace RusAlTestApp.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             CreateUserAndRole(app.ApplicationServices);
-                
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -123,7 +122,7 @@ namespace RusAlTestApp.Web
 
             app.UseRouting();
 
-            app.UseAuthentication();   
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

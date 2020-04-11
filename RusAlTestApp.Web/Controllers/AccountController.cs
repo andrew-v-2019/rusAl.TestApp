@@ -1,19 +1,18 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using RusAlTestApp.Web.Models;
+using RusAlTestApp.ViewModels;
+
 
 namespace RusAlTestApp.Web.Controllers
 {
     public class AccountController : Controller
     {
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
 
-        public AccountController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        public AccountController(SignInManager<IdentityUser> signInManager)
         {
             _signInManager = signInManager;
-            _userManager = userManager;
         }
 
         public IActionResult Login()
@@ -36,7 +35,7 @@ namespace RusAlTestApp.Web.Controllers
                 return RedirectToAction("AdmIndex", "Home");
             }
 
-            ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+            ModelState.AddModelError("", "Неправильные данные");
             return View(model);
         }
 

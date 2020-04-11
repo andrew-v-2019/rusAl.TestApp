@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
-namespace RusAlTestApp.Web.Models
+namespace RusAlTestApp.ViewModels
 {
     public class RegistrationViewModel
     {

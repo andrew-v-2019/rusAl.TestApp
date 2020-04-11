@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RusalTestApp.Data\RusAlTestApp.Data.csproj" />
+    <ProjectReference Include="..\RusAlTestApp.Services\RusAlTestApp.Services.csproj" />
+    <ProjectReference Include="..\RusAlTestApp.ViewModels\RusAlTestApp.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>
