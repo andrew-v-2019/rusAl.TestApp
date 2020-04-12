@@ -49,7 +49,6 @@ namespace RusAlTestApp.Services
             return model;
         }
 
-
         public async Task<IEnumerable<RegistrationViewModel>> GetByFilter(FilterViewModel filter)
         {
             var query = _applicationContext.Registrations.OrderBy(x => x.FirstName).ThenBy(x => x.LastName)
@@ -108,13 +107,11 @@ namespace RusAlTestApp.Services
             }
         }
 
-       
-
         private static Registration MapRegistration(RegistrationViewModel registrationViewModel)
         {
             var date = !string.IsNullOrWhiteSpace(registrationViewModel.DateOfBirth)
                 ? DateTime.Parse(registrationViewModel.DateOfBirth)
-                : (DateTime?)null;
+                : (DateTime?) null;
 
             var registration = new Registration
             {
@@ -153,5 +150,4 @@ namespace RusAlTestApp.Services
             return drinks;
         }
     }
-
 }
